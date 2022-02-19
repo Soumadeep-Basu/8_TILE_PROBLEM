@@ -1,17 +1,23 @@
-
+#Define Variables to store Number of nodes Possible
+global State_Tracker
+State_Tracker = 0
 
 #Here we are defining the initial tile state, this can also be taken as an input from the user
 A_TILE_INIT_BOARD = [[8,1,3],[7,2,4],["*",6,5]]
 
 
+
+
 #Here we are defining the Final tile state, this can also be taken as an input from the user
-A_TILE_GOAL_STATE = [[1,2,3],[8,"*",4],[7,6,5]]
+A_TILE_GOAL_STATE = [[1,2,3],[8,4, "*"],[7,6,5]]
+
+
 
 
 
 
 #Define the function that calculates the Manhattan Distance between the tiles in the Initial and Final State
-def Calc_Huristic(States):
+def Calc_Huristic1(States):
   
     Huristic_Cost = []
 
@@ -183,11 +189,16 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
             temp[x][y], temp[x][y-1] = temp[x][y-1], temp[x][y]
 
         
+        #Increase the State_Tracker, to depict all the states that have been enqueued:
+        global State_Tracker
+
+        State_Tracker+= len(possible_states)
+
 
         #list that will have all the cost metrics per state
         costs = []
 
-        costs = Calc_Huristic2(possible_states)
+        costs = Calc_Huristic1(possible_states)
 
         
         #move that costs the least
@@ -222,6 +233,8 @@ Node = Tree(A_TILE_INIT_BOARD, 0)
 Node = FindPath(Node)
 
 
+
+
 #Print the Path , (if it exits), from root to leaf
 while(Node.next_state!=None):
     show(Node.val)
@@ -230,6 +243,16 @@ while(Node.next_state!=None):
     else:
         break
 
+
+#Print out the Statistics of the Particular Instance that Has Just Run
+
+print(" Report on the Depth or Length of the Path (Visited) and the Number of nodes that were expanded or enqueued")
+print("----")
+print("depth of the Tree or number of moves required: ", Node.depth)
+print("----")
+print("Total Number of States that are Possible : ", State_Tracker)
+print("----")
+print("No of States that are enqued : " , Node.depth + 1)
 
 
     
