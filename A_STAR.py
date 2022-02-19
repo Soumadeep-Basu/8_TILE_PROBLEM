@@ -2,14 +2,33 @@
 global State_Tracker
 State_Tracker = 0
 
+
+#Store the Value of the Huristic Choosen over here
+global huristic_choosen
+
+
+#Store the Initial and Final States in a Variable
+
+global Initial
+global Final
+
+#Initialize the matrices to the given Dimensions
+Initial = [[0 for j in range(3)] for i in range(3)]
+Final = [[0 for j in range(3)] for i in range(3)]
+
+
+
+
 #Here we are defining the initial tile state, this can also be taken as an input from the user
-A_TILE_INIT_BOARD = [[8,1,3],[7,2,4],["*",6,5]]
+# A_TILE_INIT_BOARD = [[8,1,3],[7,2,4],["*",6,5]]
+A_TILE_INIT_BOARD = Initial
 
 
 
 
 #Here we are defining the Final tile state, this can also be taken as an input from the user
-A_TILE_GOAL_STATE = [[1,2,3],[8,4, "*"],[7,6,5]]
+# A_TILE_GOAL_STATE = [[1,2,3],[8,4, "*"],[7,6,5]]
+A_TILE_GOAL_STATE = Final
 
 
 
@@ -92,6 +111,9 @@ def show(M):
 
 #Definition of Function that Finds the path based on Huristics to given optimal possible path
 def FindPath(Node,final = A_TILE_GOAL_STATE):
+    
+   
+
     #Initialize Temp array so that given a state, you can find all possible next states that are admissible through manipulation
     temp =[[0 for j in range(len(A_TILE_GOAL_STATE[0]))] for i in range(len(A_TILE_GOAL_STATE))]
 
@@ -197,8 +219,13 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
 
         #list that will have all the cost metrics per state
         costs = []
-
-        costs = Calc_Huristic1(possible_states)
+        
+        global huristic_choosen
+        #check what Huristic was choosen
+        if (huristic_choosen == 1):
+            costs = Calc_Huristic1(possible_states)
+        else:
+            costs = Calc_Huristic2(possible_states)
 
         
         #move that costs the least
@@ -225,47 +252,67 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
         return Node 
 
 
+#Define Main Funtion That controls the Process Flow
+def main():
+
+    global huristic_choosen
+    global Initial
+    global Final
+
+    #Code to Enbale the User to Choose the Huristic that Has to be Performed for the Particular Problem:
+
+    print("8 Tile Problem Solver Based on the A-Star Algorith")
+    print("Choose your Huristic : ")
+    print("------")
+    print("1. Manhattan Distacne")
+    print("2. Number of Misplaced Tiles")
+    huristic_choosen = input("Enter 1 or 2 :")
+
+    #Code that Allowes the User to enter the initial and the Final States of the Problem
+    print("Enter the Initial State of the 3*3 Matrix, note that * is the representaive of the empty tile.")
+    for i in range(3):
+        for j in range(3):
+            Initial[i][j] = input()
 
 
-#Initialize Tree 
-Node = Tree(A_TILE_INIT_BOARD, 0)
+    print("-------------")
 
-Node = FindPath(Node)
-
-
-
-
-#Print the Path , (if it exits), from root to leaf
-while(Node.next_state!=None):
-    show(Node.val)
-    if Node.next_state!="NONE":
-        Node = Node.next_state
-    else:
-        break
+    print("Enter the Final State of the 3*3 Matrix, note that * is the representaive of the empty tile.")
+    for i in range(3):
+        for j in range(3):
+            Final[i][j] = input()
 
 
-#Print out the Statistics of the Particular Instance that Has Just Run
+    #Initialize Tree 
+    Node = Tree(A_TILE_INIT_BOARD, 0)
 
-print(" Report on the Depth or Length of the Path (Visited) and the Number of nodes that were expanded or enqueued")
-print("----")
-print("depth of the Tree or number of moves required: ", Node.depth)
-print("----")
-print("Total Number of States that are Possible : ", State_Tracker)
-print("----")
-print("No of States that are enqued : " , Node.depth + 1)
-
-
-    
-
-     
-
-
-
-
-
+    Node = FindPath(Node)
 
 
 
 
+    #Print the Path , (if it exits), from root to leaf
+    while(Node.next_state!=None):
+        show(Node.val)
+        if Node.next_state!="NONE":
+            Node = Node.next_state
+        else:
+            break
+
+
+    #Print out the Statistics of the Particular Instance that Has Just Run
+
+    print(" Report on the Depth or Length of the Path (Visited) and the Number of nodes that were expanded or enqueued")
+    print("----")
+    print("depth of the Tree or number of moves required: ", Node.depth)
+    print("----")
+    print("Total Number of States that are Possible : ", State_Tracker)
+    print("----")
+    print("No of States that are enqued : " , Node.depth + 1)
+
+ 
+
+if __name__ == "__main__":
+    main()
 
 
