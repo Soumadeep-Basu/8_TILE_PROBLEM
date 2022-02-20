@@ -1,3 +1,7 @@
+#A STAR ALGO FOR SOLVING A-TILE
+
+
+
 #Define Variables to store Number of nodes Possible
 global State_Tracker
 State_Tracker = 0
@@ -6,6 +10,12 @@ State_Tracker = 0
 #Store the Value of the Huristic Choosen over here
 global huristic_choosen
 
+
+#Store Visited list, To make sure same states are not visited Again
+global Visited
+
+# Initialize visited Node
+Visited = []
 
 #Store the Initial and Final States in a Variable
 
@@ -111,8 +121,12 @@ def show(M):
 
 #Definition of Function that Finds the path based on Huristics to given optimal possible path
 def FindPath(Node,final = A_TILE_GOAL_STATE):
-    
-   
+    global Visited
+    global State_Tracker
+    #Add the Node to visited :
+    Visited.append(Node.val)
+
+
 
     #Initialize Temp array so that given a state, you can find all possible next states that are admissible through manipulation
     temp =[[0 for j in range(len(A_TILE_GOAL_STATE[0]))] for i in range(len(A_TILE_GOAL_STATE))]
@@ -133,10 +147,18 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
             temp[i][j] = state[i][j] 
 
     #Stopping Conditions for Reccursion
-    if(Node.depth > 10):
+    if(Node.depth > 15):
         print("Max Depth Reached, solution not Found.")
         Node.next_state = "NONE"
-        return Node
+        print()
+        print(" Report on the Depth or Length of the Path (Visited) and the Number of nodes that were expanded or enqueued")
+        print("----")
+        print("depth of the Tree or number of moves made up until now: ", Node.depth)
+        print("----")
+        print("Total Number of States that are Possible (Exxhaustive): ", State_Tracker)
+        print("----")
+        print("No of States that are enqued : " , Node.depth + 1)
+        exit()
     elif(Node.val == final):
         print(" Goal State Reached !!")
         Node.next_state = "NONE"
@@ -212,7 +234,7 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
 
         
         #Increase the State_Tracker, to depict all the states that have been enqueued:
-        global State_Tracker
+        
 
         State_Tracker+= len(possible_states)
 
@@ -230,9 +252,29 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
         
         #move that costs the least
         x = min(costs)
+
+
+
+        for i in range(len(costs)):
+            if costs[i]==x and Visited.count(possible_states[i])==0:
+                break
         
-        # Get the index corresponding to that move
-        x1 = costs.index(x)
+        #Make sure that the node that is being appended is not repeated and is a new state
+        if( i == len(costs)):
+            print("No new States can be found, Goal not reached")
+            print()
+            print(" Report on the Depth or Length of the Path (Visited) and the Number of nodes that were expanded or enqueued")
+            print("----")
+            print("depth of the Tree or number of moves required or made until now: ", Node.depth)
+            print("----")
+            print("Total Number of States that are Possible (Exhaustive): ", State_Tracker)
+            print("----")
+            print("No of States that are enqued : " , Node.depth + 1)
+            exit()
+        else:
+            # Get the index corresponding to that move
+            x1 = i
+            
         
         # Get that possible next state
         next_s = possible_states[x1]
@@ -254,7 +296,7 @@ def FindPath(Node,final = A_TILE_GOAL_STATE):
 
 #Define Main Funtion That controls the Process Flow
 def main():
-
+    #Set the Scope for all the global variables that were defined
     global huristic_choosen
     global Initial
     global Final
