@@ -1,4 +1,4 @@
-# ARTIFICIAL INTELLIGENCE HW1
+# ARTIFICIAL INTELLIGENCE SOLUTION TO THE A_TILE PROBLEM
 
 The purpose of this document is to serve as a guide and report for the tasks given in HW1
 
